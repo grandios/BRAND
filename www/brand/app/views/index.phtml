@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?php
+            echo $this->tag->getTitle();
+            echo $this->tag->stylesheetLink("css/lib/bootstrap.min.css");
+            echo $this->tag->stylesheetLink("css/lib/bootstrap-theme.min.css");
+            echo $this->tag->stylesheetLink("css/main.css");
+            echo $this->tag->javascriptInclude("js/lib/modernizr.min.js");
+        ?>
+        <!--[if lt IE 9]>
+        <?php echo $this->tag->javascriptInclude("js/lib/respond.min.js"); ?>
+        <![endif]-->
+    </head>
+    <body>
+    <?php echo $this->getContent(); ?>
+    <?php
+        echo $this->tag->javascriptInclude("js/lib/jquery.min.js");
+        echo $this->tag->javascriptInclude("js/lib/bootstrap.min.js");
+        echo $this->tag->javascriptInclude("js/plugins.js");
+        echo $this->tag->javascriptInclude("js/main.js");
+    ?>
+    </body>
+</html>
