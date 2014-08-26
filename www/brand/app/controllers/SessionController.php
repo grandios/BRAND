@@ -1,7 +1,7 @@
 <?php
 
 use Phalcon\Tag as Tag;
-
+use Phalcon\Forms\Form;
 class SessionController extends ControllerBase
 {
     public function initialize()
@@ -19,39 +19,72 @@ class SessionController extends ControllerBase
         }
     }
 
+
+
     public function registerAction()
     {
+        $formElements = array(
+            'name' => array('label' => 'Name', 'type' => 'text'),
+            'email' => array('label' => 'E-Mail', 'placeholder' => 'E-Mail-Adresse', 'type' => 'text', 'required' => true),
+            'password' => array('type' => 'password'),
+            'repeatPassword' => array('type' => 'password'),
+        );
+        $form = new FormBase();
+        $form->setFormElements($formElements);
         $request = $this->request;
+        $messages = array();
         if ($request->isPost()) {
+            $customMessages = array();
+            $user = new Users();
+            $form->bind($_POST, $user);
+            // Compare Passwords
+            $password = $request->getPost('password');
+            $repeatPassword = $this->request->getPost('repeatPassword');
+            if ($password != $repeatPassword) {
+                $customMessages['repeatPassword'] = array('Die Passwörter stimmen nicht überein.');
+            }
+            // Validate Form
+            if($form->isValid() && !count($customMessages)) {
+                $user->created_at = new Phalcon\Db\RawValue('now()');
+                $user->save();
+            } else {
+                $form->setCustomMessages($customMessages);
+            }
             $name = $request->getPost('name', array('string', 'striptags'));
             $username = $request->getPost('username', 'alphanum');
             $email = $request->getPost('email', 'email');
             $password = $request->getPost('password');
             $repeatPassword = $this->request->getPost('repeatPassword');
 
+            $error = false;
             if ($password != $repeatPassword) {
-                $this->flash->error('Passwords are diferent');
-                return false;
+                $messages['repeatPassword'] = array('Die Passwörter sind nicht gleich');
+                //$error = true;
             }
 
-            $user = new Users();
-            $user->username = $username;
-            $user->password = sha1($password);
-            $user->name = $name;
-            $user->email = $email;
-            $user->created_at = new Phalcon\Db\RawValue('now()');
-            $user->active = 'Y';
-            if ($user->save() == false) {
-                foreach ($user->getMessages() as $message) {
-                    $this->flash->error((string) $message);
+            if(!$error) {
+                $user = new Users();
+                $user->username = $username;
+                $user->password = sha1($password);
+                $user->name = $name;
+                $user->email = $email;
+                $user->created_at = new Phalcon\Db\RawValue('now()');
+                $user->active = 'Y';
+                if($user->validation()) {
+
                 }
-            } else {
-                Tag::setDefault('email', '');
-                Tag::setDefault('password', '');
-                $this->flash->success('Thanks for sign-up, please log-in to start generating invoices');
-                return $this->forward('session/index');
+                if ($user->save() == false) {
+                    $messages = $user->getMessages();
+                } else {
+                    Tag::setDefault('email', '');
+                    Tag::setDefault('password', '');
+                    $this->flash->success('Thanks for sign-up, please log-in to start generating invoices');
+                    return $this->forward('session/index');
+                }
             }
         }
+        $this->view->setVar('form', $form->renderForm());
+        $this->view->setVar("messages", $messages);
     }
 
     /**

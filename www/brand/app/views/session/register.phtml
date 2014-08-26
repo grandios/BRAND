@@ -1,28 +1,41 @@
+
 <div class="page-header">
     <h2>BRAND-Account alegen</h2>
 </div>
 <?php echo $this->getContent() ?>
+
 <form id="registerForm" class="form-horizontal" target="<?php echo $this->url->get('session/register'); ?>" method="post" role="form">
-    <div class="form-group">
-        <label for="name">Vollständiger Name</label>
-        <input type="text" class="form-control" id="name" placeholder="Vollständiger Name">
+    <?php echo $form; ?>
+
+
+    <div class="form-group<?php echo isset($messages['name']) && count($messages['name']) ? ' has-error' : ''; ?>">
+        <label for="name" class="control-label">Vollständiger Name</label>
+        <input id="name" name="name" type="text" class="form-control" placeholder="Vollständiger Name">
+        <?php echo isset($messages['name']) && count($messages['name']) ? '<p class="help-block">'.join('<br>', $messages['name']).'</p>' : ''; ?>
     </div>
-    <div class="form-group">
-        <label for="username">Benutzername</label>
-        <input type="text" class="form-control" id="username" placeholder="Benutzername">
+    <div class="form-group<?php echo isset($messages['username']) && count($messages['username']) ? ' has-error' : ''; ?>">
+        <label for="username" class="control-label">Benutzername</label>
+        <input id="username" name="username" type="text" class="form-control" placeholder="Benutzername">
+        <?php echo isset($messages['username']) && count($messages['username']) ? '<p class="help-block">'.join('<br>', $messages['username']).'</p>' : ''; ?>
     </div>
-    <div class="form-group">
-        <label for="email">E-Mail-Adresse</label>
-        <input type="email" class="form-control" id="email" placeholder="E-Mail-Adresse">
+    <div class="form-group<?php echo isset($messages['email']) && count($messages['email']) ? ' has-error' : ''; ?>">
+        <label for="email" class="control-label">E-Mail-Adresse</label>
+        <input id="email" name="email" type="email" class="form-control" placeholder="E-Mail-Adresse">
+        <?php echo isset($messages['email']) && count($messages['email']) ? '<p class="help-block">'.join('<br>', $messages['email']).'</p>' : ''; ?>
     </div>
-    <div class="form-group">
-        <label for="password">Passwort</label>
-        <input type="password" class="form-control" id="password" placeholder="Passwort">
+    <div class="form-group<?php echo isset($messages['password']) && count($messages['password']) ? ' has-error' : ''; ?>">
+        <label for="password" class="control-label">Passwort</label>
+        <input id="password" name="password" type="password" class="form-control" placeholder="Passwort">
+        <?php echo isset($messages['password']) && count($messages['password']) ? '<p class="help-block">'.join('<br>', $messages['password']).'</p>' : ''; ?>
         <p class="help-block">(mindestens 8 Zeichen)</p>
     </div>
-    <div class="form-group">
-        <label for="repeatPassword">Passwort wiederholen</label>
-        <input type="password" class="form-control" id="repeatPassword" placeholder="Passwort wiederholen">
+    <div class="form-group<?php echo isset($messages['repeatPassword']) && count($messages['repeatPassword']) ? ' has-error' : ''; ?>">
+        <label for="repeatPassword" class="control-label">Passwort wiederholen</label>
+        <input id="repeatPassword" name="repeatPassword" type="password" class="form-control" placeholder="Passwort wiederholen">
+        <?php echo isset($messages['repeatPassword']) && count($messages['repeatPassword']) ? '<p class="help-block">'.join('<br>', $messages['repeatPassword']).'</p>' : ''; ?>
     </div>
+
+
+
     <button type="submit" class="btn btn-primary btn-large">Registrieren</button>
 </form>
